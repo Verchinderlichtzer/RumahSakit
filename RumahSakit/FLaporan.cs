@@ -101,11 +101,10 @@ namespace RumahSakit
         KryptonRadioButton laporanKiriTerpilih;
         KryptonCheckBox[] statusPerawatan;
         readonly StringBuilder sb = new StringBuilder();
-        Lt lt;
-        Tgl tgl;
-
         ReportParameter paramFilter, paramNama, paramAlamat, paramTelepon, paramFax, paramEmail, paramWebsite, paramPengurus, paramJabatan, paramTahun;
         ReportParameter[] parameter;
+        Lt lt;
+        Tgl tgl;
         public FLaporan()
         {
             InitializeComponent();
@@ -136,6 +135,39 @@ namespace RumahSakit
             laporanTerpilih = null;
             Akses(false, false, false, false, false, false);
             locked = false;
+        }
+
+        void FLaporan_Load(object sender, EventArgs e)
+        {
+            locked = true;
+            paramNama = new ReportParameter("Nama", info.Nama);
+            paramAlamat = new ReportParameter("Alamat", info.Alamat);
+            paramTelepon = new ReportParameter("Telepon", info.Telepon);
+            paramFax = new ReportParameter("Fax", info.Fax);
+            paramWebsite = new ReportParameter("Website", info.Website);
+            paramEmail = new ReportParameter("Email", info.Email);
+            paramPengurus = new ReportParameter("Pengurus", info.Pengurus);
+            paramJabatan = new ReportParameter("Jabatan", info.Jabatan);
+            parameter = new[] { paramNama, paramAlamat, paramTelepon, paramFax, paramWebsite, paramEmail, paramPengurus, paramJabatan };
+            tDari.Value = DateTime.Today;
+            tSampai.Value = DateTime.Today;
+            tBulan.Value = DateTime.Today;
+            for (int x = DateTime.Today.Year; x >= 2021; x--) tTahun.Items.Add(x);
+            tTahun.SelectedIndex = 0;
+            locked = false;
+        }
+
+        void FLaporan_Resize(object sender, EventArgs e)
+        {
+            //8   +   355   +   6   +   356   +   6   +   355   +   8
+            panelKiri.Width = (Width - 8 - 6 - 6 - 8 - 356) / 2;
+            panelKanan.Width = (Width - 8 - 6 - 6 - 8 - 356) / 2;
+            panelTanggal.Location = new Point(panelKiri.Width + 14, 8);
+            panelStatusPerawatan.Location = new Point(panelKiri.Width + 14, panelTanggal.Height + 8 + 6);
+            panelBentukLaporan.Location = new Point(panelKiri.Width + 14, panelTanggal.Height + panelStatusPerawatan.Height + 8 + 6 + 6);
+            panelKanan.Location = new Point(panelTanggal.Location.X + panelTanggal.Width + 6, 8);
+            panelDGVPagination.Location = new Point(3 + (dgv.Width / 2) - 100, dgv.Location.Y + dgv.Height);
+            lblPerawatanGrafik.Width = panelKiri.Width;
         }
 
         void Filter()
@@ -226,39 +258,6 @@ namespace RumahSakit
             cbSelesai.Enabled = statusPerawatan;
             rbRingkasan.Enabled = bentukRingkasan;
             rbDetail.Enabled = bentukDetail;
-        }
-
-        void FLaporan_Load(object sender, EventArgs e)
-        {
-            locked = true;
-            paramNama = new ReportParameter("Nama", info.Nama);
-            paramAlamat = new ReportParameter("Alamat", info.Alamat);
-            paramTelepon = new ReportParameter("Telepon", info.Telepon);
-            paramFax = new ReportParameter("Fax", info.Fax);
-            paramWebsite = new ReportParameter("Website", info.Website);
-            paramEmail = new ReportParameter("Email", info.Email);
-            paramPengurus = new ReportParameter("Pengurus", info.Pengurus);
-            paramJabatan = new ReportParameter("Jabatan", info.Jabatan);
-            parameter = new[] { paramNama, paramAlamat, paramTelepon, paramFax, paramWebsite, paramEmail, paramPengurus, paramJabatan };
-            tDari.Value = DateTime.Today;
-            tSampai.Value = DateTime.Today;
-            tBulan.Value = DateTime.Today;
-            for (int x = DateTime.Today.Year; x >= 2021; x--) tTahun.Items.Add(x);
-            tTahun.SelectedIndex = 0;
-            locked = false;
-        }
-
-        void FLaporan_Resize(object sender, EventArgs e)
-        {
-            //8   +   355   +   6   +   356   +   6   +   355   +   8
-            panelKiri.Width = (Width - 8 - 6 - 6 - 8 - 356) / 2;
-            panelKanan.Width = (Width - 8 - 6 - 6 - 8 - 356) / 2;
-            panelTanggal.Location = new Point(panelKiri.Width + 14, 8);
-            panelStatusPerawatan.Location = new Point(panelKiri.Width + 14, panelTanggal.Height + 8 + 6);
-            panelBentukLaporan.Location = new Point(panelKiri.Width + 14, panelTanggal.Height + panelStatusPerawatan.Height + 8 + 6 + 6);
-            panelKanan.Location = new Point(panelTanggal.Location.X + panelTanggal.Width + 6, 8);
-            panelDGVPagination.Location = new Point(3 + (dgv.Width / 2) - 100, dgv.Location.Y + dgv.Height);
-            lblPerawatanGrafik.Width = panelKiri.Width;
         }
 
         void BTNTampil_Click(object sender, EventArgs e)
@@ -518,6 +517,7 @@ namespace RumahSakit
 
         void TCariData_TextChanged(object sender, EventArgs e)
         {
+            if (tEntitas.SelectedIndex == -1) return;
             currentPage = 1;
             TampilDGV();
         }

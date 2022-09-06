@@ -10,9 +10,41 @@ namespace RumahSakit
     {
         Panel panelMenu;
         bool isCollapsed;
+
         public FMain()
         {
             InitializeComponent();
+        }
+
+        void FMain_Load(object sender, EventArgs e)
+        {
+            fmain = this;
+            if (IVal(GetReg("IsSavingResolution")) == 1)
+            {
+                Size = new System.Drawing.Size(IVal(GetReg("CurResolution").Left(GetReg("CurResolution").IndexOf('x'))), IVal(GetReg("CurResolution").Mid(GetReg("CurResolution").IndexOf('x') + 1)));
+                WindowState = GetReg("CurState") == "Maximized" ? FormWindowState.Maximized : FormWindowState.Normal;
+                CenterToScreen();
+            }
+        }
+
+        void FMain_VisibleChanged(object sender, EventArgs e)
+        {
+            thumbnail.PerformClick();
+            int kolom = 0;
+            btnUser.Enabled = userAktif.Equals("admin", StringComparison.OrdinalIgnoreCase);
+            QR("SELECT HakUser, HakAlat, HakTindakan, HakKamar, HakObat, HakDokter, HakPasien, HakRegistrasi, HakPerawatan, HakPembayaran FROM Users WHERE Username = '" + userAktif + "'");
+            hakAkses = new[] { BVal(dr[0]), BVal(dr[1]), BVal(dr[2]), BVal(dr[3]), BVal(dr[4]), BVal(dr[5]), BVal(dr[6]), BVal(dr[7]), BVal(dr[8]), BVal(dr[9]) };
+            foreach (KryptonCheckButton btn in (new object[] { btnUser, btnRegistrasi, btnPerawatan, btnPembayaran }).Cast<KryptonCheckButton>()) btn.Enabled = hakAkses[kolom++];
+        }
+
+        void FMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (IVal(GetReg("IsSavingResolution")) == 1)
+            {
+                if (WindowState != FormWindowState.Maximized) SetReg("CurResolution", Size.Width + "x" + Size.Height);
+                SetReg("CurState", SVal(WindowState));
+            }
+            Application.ExitThread();
         }
 
         void TampilMenu(object sender, EventArgs e)
@@ -125,6 +157,13 @@ namespace RumahSakit
             }
         }
 
+        void BTNLogout_Click(object sender, EventArgs e)
+        {
+            SetReg("LoggedIn", string.Empty);
+            Visible = false;
+            (login ?? (login = new Login())).Show();
+        }
+
         protected override CreateParams CreateParams
         {
             get
@@ -134,46 +173,6 @@ namespace RumahSakit
                 CP.ExStyle |= 0x2000000;
                 return CP;
             }
-        }
-
-        void FMain_Load(object sender, EventArgs e)
-        {
-            fmain = this;
-            if (IVal(GetReg("IsSavingResolution")) == 1)
-            {
-                Size = new System.Drawing.Size(IVal(GetReg("CurResolution").Left(GetReg("CurResolution").IndexOf('x'))), IVal(GetReg("CurResolution").Mid(GetReg("CurResolution").IndexOf('x') + 1)));
-                WindowState = GetReg("CurState") == "Maximized" ? FormWindowState.Maximized : FormWindowState.Normal;
-                CenterToScreen();
-            }
-        }
-
-        void FMain_VisibleChanged(object sender, EventArgs e)
-        {
-            thumbnail.PerformClick();
-            int kolom = 0;
-            btnUser.Enabled = userAktif.Equals("admin", StringComparison.OrdinalIgnoreCase);
-            QR("SELECT HakUser, HakAlat, HakTindakan, HakKamar, HakObat, HakDokter, HakPasien, HakRegistrasi, HakPerawatan, HakPembayaran FROM Users WHERE Username = '" + userAktif + "'");
-            hakAkses = new[] { BVal(dr[0]), BVal(dr[1]), BVal(dr[2]), BVal(dr[3]), BVal(dr[4]), BVal(dr[5]), BVal(dr[6]), BVal(dr[7]), BVal(dr[8]), BVal(dr[9]) };
-            // Semua BTNMenu, kecuali User dan Kategori Lain
-            //foreach (KryptonCheckButton btn in (new object[] { btnUser, btnAlat, btnTindakan, btnKamar, btnObat, btnDokter, btnPasien, btnRegistrasi, btnPerawatan, btnPembayaran }).Cast<KryptonCheckButton>()) btn.Enabled = hakAkses[kolom++];
-            foreach (KryptonCheckButton btn in (new object[] { btnUser, btnRegistrasi, btnPerawatan, btnPembayaran }).Cast<KryptonCheckButton>()) btn.Enabled = hakAkses[kolom++];
-        }
-
-        void BTNLogout_Click(object sender, EventArgs e)
-        {
-            SetReg("LoggedIn", string.Empty);
-            Visible = false;
-            (login ?? (login = new Login())).Show();
-        }
-
-        void FMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (IVal(GetReg("IsSavingResolution")) == 1)
-            {
-                if (WindowState != FormWindowState.Maximized) SetReg("CurResolution", Size.Width + "x" + Size.Height);
-                SetReg("CurState", SVal(WindowState));
-            }
-            Application.ExitThread();
         }
     }
 }

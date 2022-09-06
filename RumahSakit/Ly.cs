@@ -28,59 +28,59 @@ namespace RumahSakit
 
         public static void Koneksi()
         {
-            conn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + Application.StartupPath + @"\RumahSakit.accdb;Jet OLEDB:Database Password=f;");
-            conn.Open();
-            //try
-            //{
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    Application.ExitThread();
-            //}
+            try
+            {
+                conn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + Application.StartupPath + @"\RumahSakit.accdb;Jet OLEDB:Database Password=f;");
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Application.ExitThread();
+            }
         }
 
         public static void QR(string queryReader)
         {
-            cmd = new OleDbCommand(queryReader, conn);
-            dr = cmd.ExecuteReader();
-            dr.Read();
-            //try
-            //{
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    Application.ExitThread();
-            //}
+            try
+            {
+                cmd = new OleDbCommand(queryReader, conn);
+                dr = cmd.ExecuteReader();
+                dr.Read();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Application.ExitThread();
+            }
         }
 
         public static void QRL(string queryReaderLooping)
         {
-            cmd = new OleDbCommand(queryReaderLooping, conn);
-            dr = cmd.ExecuteReader();
-            //try
-            //{
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    Application.ExitThread();
-            //}
+            try
+            {
+                cmd = new OleDbCommand(queryReaderLooping, conn);
+                dr = cmd.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Application.ExitThread();
+            }
         }
 
         public static void QN(string queryNonReader)
         {
-            cmd = new OleDbCommand(queryNonReader, conn);
-            cmd.ExecuteNonQuery();
-            //try
-            //{
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    Application.ExitThread();
-            //}
+            try
+            {
+                cmd = new OleDbCommand(queryNonReader, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Application.ExitThread();
+            }
         }
 
         public static void QDGV(string queryDGV, DataGridView dataGrid, int startRecord, int maxRecord, string srcTable)
@@ -181,12 +181,6 @@ namespace RumahSakit
             return source?.IndexOf(toCheck, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        /// <summary>
-        /// Pagination
-        /// </summary>
-        /// <param name="tb">Total Baris</param>
-        /// <param name="jb">Jumlah Baris</param>
-        /// <param name="cp">Current Page</param>
         public static void GoToPageNumber(int totalBaris, double maxRows, ref int current)
         {
             var Confirm = new Konfirmasi("Pilih antara halaman 1 ~ " + Math.Ceiling(totalBaris / maxRows), "-", 0, Konfirmasi.Jenis.Pagination);

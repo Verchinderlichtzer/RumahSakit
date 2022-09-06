@@ -253,7 +253,7 @@ namespace RumahSakit
 
         void TCariData_TextChanged(object sender, EventArgs e)
         {
-            if (locked) return;
+            if (locked || tKategori.SelectedIndex == -1) return;
             currentPage = 1;
             TampilDGVPencarian();
         }
@@ -379,9 +379,13 @@ namespace RumahSakit
         {
             DataGridView dgv = sender as DataGridView;
             TextBox tb = e.Control as TextBox;
-            tb.KeyPress -= Decimals;
-            tb.KeyPress -= Numbers;
             if (dgv.CurrentCell.ColumnIndex == 2) tb.KeyPress += Numbers;
+        }
+
+        void DGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            dgv.CurrentCell.Value = SVal(dgv.CurrentCell.Value).Replace(".", "");
         }
 
         void DGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -390,12 +394,6 @@ namespace RumahSakit
             if (dgv.CurrentCell.Value is null || !int.TryParse(SVal(dgv.CurrentCell.Value).Replace(".", ""), out _)) dgv.CurrentCell.Value = 1;
             Hitung();
             dgv.Rows[e.RowIndex].Cells[2].Value = SVal(IVal(dgv.CurrentCell.Value), "n0");
-        }
-
-        void DGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            DataGridView dgv = sender as DataGridView;
-            dgv.CurrentCell.Value = SVal(dgv.CurrentCell.Value).Replace(".", "");
         }
 
         void DGV_KeyPress(object sender, KeyPressEventArgs e)

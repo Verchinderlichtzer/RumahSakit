@@ -14,14 +14,6 @@ namespace RumahSakit
         [DllImport("user32")]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
-        void Login_VisibleChanged(object sender, EventArgs e)
-        {
-            tUsername.Clear();
-            tPassword.Clear();
-            cbCookies.Checked = false;
-            tUsername.Focus();
-        }
-
         void Login_Load(object sender, EventArgs e)
         {
             login = this;
@@ -30,6 +22,19 @@ namespace RumahSakit
                 keybd_event((byte)Keys.CapsLock, 0x14, 1, 0);
                 keybd_event((byte)Keys.CapsLock, 0x14, 3, 0);
             }
+        }
+
+        void Login_VisibleChanged(object sender, EventArgs e)
+        {
+            tUsername.Clear();
+            tPassword.Clear();
+            cbCookies.Checked = false;
+            tUsername.Focus();
+        }
+
+        void Login_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.ExitThread();
         }
 
         void InputKarakter(object sender, KeyPressEventArgs e)
@@ -56,11 +61,6 @@ namespace RumahSakit
                 (fmain ?? (fmain = new FMain())).Show();
                 Visible = false;
             }
-        }
-
-        void Login_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Application.ExitThread();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys koentji)

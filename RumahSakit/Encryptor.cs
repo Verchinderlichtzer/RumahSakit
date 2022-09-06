@@ -7,9 +7,9 @@ namespace RumahSakit
 {
     public sealed class Encryptor
     {
-        private readonly TripleDESCryptoServiceProvider TripleDes = new TripleDESCryptoServiceProvider();
+        readonly TripleDESCryptoServiceProvider TripleDes = new TripleDESCryptoServiceProvider();
 
-        private byte[] TruncateHash(string key, int length)
+        byte[] TruncateHash(string key, int length)
         {
             var sha1 = new SHA1CryptoServiceProvider();
             var keyBytes = Encoding.Unicode.GetBytes(key);

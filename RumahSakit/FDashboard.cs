@@ -17,6 +17,12 @@ namespace RumahSakit
             InitializeComponent();
         }
 
+        void TampilIdPerawatan()
+        {
+            tIdPerawatan.Items.Clear();
+            tIdPerawatan.Items.AddRange((from x in daftarPerawatan orderby x.TanggalMasuk descending select x.IdPerawatan).ToArray());
+        }
+
         void FDashboard_Load(object sender, EventArgs e)
         {
             locked = true;
@@ -71,12 +77,6 @@ namespace RumahSakit
         void FDashboard_Resize(object sender, EventArgs e)
         {
             panelDGVLogPagination.Location = new Point(3 + (dgvLog.Width / 2) - 100, 32 + dgvLog.Height);
-        }
-
-        void TampilIdPerawatan()
-        {
-            tIdPerawatan.Items.Clear();
-            tIdPerawatan.Items.AddRange((from x in daftarPerawatan orderby x.TanggalMasuk descending select x.IdPerawatan).ToArray());
         }
 
         void SimpanInfo(object sender, EventArgs e)

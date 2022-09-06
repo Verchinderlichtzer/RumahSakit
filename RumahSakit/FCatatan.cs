@@ -17,6 +17,7 @@ namespace RumahSakit
 
         KryptonRadioButton namaStatus;
         readonly StringBuilder sb = new StringBuilder();
+
         public FCatatan()
         {
             InitializeComponent();
@@ -58,7 +59,7 @@ namespace RumahSakit
             tStatus.Clear();
         }
 
-        private void FCatatan_Load(object sender, EventArgs e)
+        void FCatatan_Load(object sender, EventArgs e)
         {
             locked = true;
             tDari.Value = DateTime.Today;
@@ -271,7 +272,7 @@ namespace RumahSakit
             Paging();
         }
 
-        private void BTNRefresh_Click(object sender, EventArgs e)
+        void BTNRefresh_Click(object sender, EventArgs e)
         {
             Clear();
             ClearDetail();

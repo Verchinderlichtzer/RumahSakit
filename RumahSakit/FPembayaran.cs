@@ -17,6 +17,7 @@ namespace RumahSakit
             InitializeComponent();
         }
 
+        #region Form
         void Clear()
         {
             Tampil();
@@ -96,7 +97,9 @@ namespace RumahSakit
         {
             btnSimpan.Enabled = tIdPerawatan.SelectedIndex >= 0 && IVal(tBayar.Text) > 0;
         }
+        #endregion
 
+        #region CRUD
         void BTNSimpan_Click(object sender, EventArgs e)
         {
             int bayar = balance < 0 ? IVal(tBayar.Text) : IVal(tTotalBiaya.Text.Replace(".", "")) - IVal(tTerbayar.Text.Replace(".", ""));
@@ -124,6 +127,23 @@ namespace RumahSakit
             Clear();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys koentji)
+        {
+            if (koentji == Keys.Enter)
+            {
+                btnSimpan.PerformClick();
+                return true;
+            }
+            else if (koentji == Keys.Oemtilde)
+            {
+                btnRefresh.PerformClick();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, koentji);
+        }
+        #endregion
+
+        #region DGV
         void TCariData_TextChanged(object sender, EventArgs e)
         {
             TampilDGV();
@@ -181,20 +201,6 @@ namespace RumahSakit
             int nomor = 0;
             foreach (var g in detailAlat.Concat(detailTindakan).Concat(detailKamar).Concat(detailObat).Concat(detailDokter).OrderBy(x => x.Kolom2).ThenBy(x => x.Kolom1)) dgv.Rows.Add(++nomor, g.Kolom1, g.Kolom2, g.Kolom3);
         }
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys koentji)
-        {
-            if (koentji == Keys.Enter)
-            {
-                btnSimpan.PerformClick();
-                return true;
-            }
-            else if (koentji == Keys.Oemtilde)
-            {
-                btnRefresh.PerformClick();
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, koentji);
-        }
+        #endregion
     }
 }
