@@ -169,22 +169,15 @@ namespace RumahSakit
             }
         }
 
-        public static string Reverse(string s)
+        public static void GoToPageNumber(int totalBaris, double maxRows, ref int current)
         {
-            char[] charArray = s.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
+            var Confirm = new Konfirmasi("Pilih antara halaman 1 ~ " + Math.Ceiling(totalBaris / maxRows), "-", 0, Konfirmasi.Jenis.Pagination);
+            if (Confirm.ShowDialog() == DialogResult.Yes && halamanTerpilih != 0) current = halamanTerpilih;
         }
 
         public static bool Cari(this string source, string toCheck)
         {
             return source?.IndexOf(toCheck, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        public static void GoToPageNumber(int totalBaris, double maxRows, ref int current)
-        {
-            var Confirm = new Konfirmasi("Pilih antara halaman 1 ~ " + Math.Ceiling(totalBaris / maxRows), "-", 0, Konfirmasi.Jenis.Pagination);
-            if (Confirm.ShowDialog() == DialogResult.Yes && halamanTerpilih != 0) current = halamanTerpilih;
         }
 
         public static string Left(this string str, int count)
@@ -212,6 +205,13 @@ namespace RumahSakit
             str += string.Empty;
             if (count > str.Length) count = str.Length - index;
             return str.Substring(index, count);
+        }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
 
         public static string SVal(object objek)
@@ -258,7 +258,7 @@ namespace RumahSakit
             return hasil;
         }
 
-        public static void Ukur(KryptonDataGridView dg) // For Development
+        public static void Ukur(DataGridView dg) // For Development
         {
             int totalPanjang = 0;
             string z = null;
